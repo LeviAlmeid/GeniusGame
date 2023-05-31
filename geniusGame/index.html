@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="main.css">
+  <title>Genius Game</title>
+
+</head>
+<body>
+  <h1>Genius Game</h1>
+  <div id="gameboard">
+    <div class="tile red" onclick="tileClicked(0)"></div>
+    <div class="tile green" onclick="tileClicked(1)"></div>
+    <div class="tile blue" onclick="tileClicked(2)"></div>
+    <div class="tile yellow" onclick="tileClicked(3)"></div>
+  </div>
+  <button onclick="startGame()">Start Game</button>
+
+  <script>
+    // Array de sequência aleatória
+    var sequence = [];
+    // Índice do próximo clique esperado
+    var nextClickIndex = 0;
+    // Cores possíveis
+    var colors = ["red", "green", "blue", "yellow"];
+
+    function startGame() {
+      // Limpa a sequência anterior
+      sequence = [];
+      // Inicia com o primeiro clique esperado
+      nextClickIndex = 0;
+      // Gera uma nova sequência aleatória
+      generateSequence();
+      // Mostra a sequência para o jogador
+      showSequence();
+    }
+
+    function generateSequence() {
+      for (var i = 0; i < 4; i++) {
+        var randomColor = Math.floor(Math.random() * 4);
+        sequence.push(colors[randomColor]);
+      }
+    }
+
+    function showSequence() {
+      var i = 0;
+      var interval = setInterval(function() {
+        playTile(sequence[i]);
+        i++;
+        if (i >= sequence.length) {
+          clearInterval(interval);
+        }
+      }, 1000);
+    }
+
+    function playTile(color) {
+      var tile = document.querySelector("." + color);
+      if (tile) {
+        tile.style.opacity = "1";
+        setTimeout(function() {
+          tile.style.opacity = "0.5";
+        }, 500);
+      }
+    }
+
+    function tileClicked(index) {
+      var selectedColor = colors[index];
+      playTile(selectedColor);
+
+      if (selectedColor === sequence[nextClickIndex]) {
+        nextClickIndex++;
+        if (nextClickIndex === sequence.length) {
+          alert("Você ganhou o jogo!");
+          startGame();
+        }
+      } else {
+        alert("Game Over!");
+        startGame();
+      }
+    }
+  </script>
+</body>
+</html>
